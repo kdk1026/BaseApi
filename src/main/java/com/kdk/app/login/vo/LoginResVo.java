@@ -32,6 +32,12 @@ public class LoginResVo extends CommonResVo {
 	@Schema(description = "접근 토큰 만료시간", requiredMode = Schema.RequiredMode.REQUIRED)
 	private int accessTokenExpireSecond;
 
+	@Schema(description = "갱신 토큰", requiredMode = Schema.RequiredMode.REQUIRED)
+	private String refreshToken;
+
+	@Schema(description = "갱신 토큰 만료시간", requiredMode = Schema.RequiredMode.REQUIRED)
+	private int refreshTokenExpireSecond;
+
 	@Schema(description = "아이디", requiredMode = Schema.RequiredMode.REQUIRED)
 	private String userId;
 

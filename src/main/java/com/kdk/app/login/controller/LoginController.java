@@ -68,6 +68,15 @@ public class LoginController {
 
 			loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 
+			String sRefreshToken = jwtTokenProvider.generateRefreshToken(user);
+
+			loginResVo.setRefreshToken(sRefreshToken);
+
+			String sRefreshTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.refresh.expire.minute");
+			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
+
+			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
+
 			String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
 				sTokenType = sTokenType + " ";
