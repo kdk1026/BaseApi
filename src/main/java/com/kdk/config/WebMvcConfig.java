@@ -53,8 +53,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.excludePathPatterns("/", "/test/exAuth", "/login/**");
 	}
 
-	@Bean
-	public MappingJackson2HttpMessageConverter jsonEscapeConverter() {
+    @Bean
+    MappingJackson2HttpMessageConverter jsonEscapeConverter() {
 		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
 		objectMapper.getFactory().setCharacterEscapes(new HTMLCharacterEscapes());
 		return new MappingJackson2HttpMessageConverter(objectMapper);

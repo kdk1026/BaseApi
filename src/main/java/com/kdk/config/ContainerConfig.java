@@ -28,8 +28,8 @@ public class ContainerConfig {
     @Value("${tomcat.ajp.port}")
     int ajpPort;
 
-	@Bean
-	public ServletWebServerFactory servletContainer() {
+    @Bean
+    ServletWebServerFactory servletContainer() {
 		TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
 		tomcat.addAdditionalTomcatConnectors(createAjpConnector());
 

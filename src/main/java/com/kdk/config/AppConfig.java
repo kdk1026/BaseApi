@@ -32,8 +32,8 @@ public class AppConfig {
 		return env.getActiveProfiles()[0];
 	}
 
-	@Bean
-	public PropertiesFactoryBean application() {
+    @Bean
+    PropertiesFactoryBean application() {
 		PropertiesFactoryBean properties = new PropertiesFactoryBean();
 
 		ClassPathResource application = new ClassPathResource("application.properties");
