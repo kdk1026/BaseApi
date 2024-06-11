@@ -70,7 +70,7 @@ public class GsonUtil {
 			return converterObjToJsonStr(map);
 		}
 
-		public static String converterListToJsonStr(List<Map<String, Object>> list) {
+		public static String converterListToJsonStr(List<?> list) {
 			return converterObjToJsonStr(list);
 		}
 	}
@@ -110,9 +110,8 @@ public class GsonUtil {
 			return jsonObj;
 		}
 
-		@SuppressWarnings("unchecked")
-		public static List<Map<String, Object>> converterJsonStrToList(String sJsonArr) {
-			List<Map<String, Object>> list = new ArrayList<>();
+		public static List<?> converterJsonStrToList(String sJsonArr) {
+			List<?> list = new ArrayList<>();
 
 			Gson gson = getInstance();
 
@@ -137,6 +136,18 @@ public class GsonUtil {
 			}
 
 			return jsonArray;
+		}
+
+		public static <T> T converterJsonStrToClass(String jsonStr, Class<T> clazz) {
+			Gson gson = getInstance();
+
+			try {
+				Object result = gson.fromJson(jsonStr, clazz);
+				return clazz.cast(result);
+			} catch (Exception e) {
+				logger.error("", e);
+			}
+			return null;
 		}
 	}
 
@@ -177,4 +188,3 @@ public class GsonUtil {
 	}
 
 }
-
