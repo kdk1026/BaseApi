@@ -95,7 +95,7 @@ public class RefreshServiceImpl implements RefreshService {
 		loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 		loginResVo.setAccessToken(sNewAccessToken);
 
-		loginResVo.setRefreshToken(refreshParamVo.getRefreshToken());
+		//loginResVo.setRefreshToken(refreshParamVo.getRefreshToken());
 
 		loginResVo.setCode(ResponseCodeEnum.SUCCESS.getCode());
 		loginResVo.setMessage(ResponseCodeEnum.SUCCESS.getMessage());
