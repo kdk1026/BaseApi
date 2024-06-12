@@ -78,15 +78,6 @@ public class LoginController {
 			// 갱신 토큰은 쿠키에 httpOnly
 			CookieUtil.addCookie(response, "refreshToken", sRefreshToken, nRefreshTokenExpireSecond, false, false, null);
 
-			/*
-			loginResVo.setRefreshToken(sRefreshToken);
-
-			String sRefreshTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.refresh.expire.minute");
-			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
-
-			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
-			*/
-
 			String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
 				sTokenType = sTokenType + " ";

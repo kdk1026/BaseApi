@@ -95,7 +95,12 @@ public class RefreshServiceImpl implements RefreshService {
 		loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 		loginResVo.setAccessToken(sNewAccessToken);
 
-		//loginResVo.setRefreshToken(refreshParamVo.getRefreshToken());
+		String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
+		if ( sTokenType.lastIndexOf(" ") == -1 ) {
+			sTokenType = sTokenType + " ";
+		}
+
+		loginResVo.setTokenType(sTokenType);
 
 		loginResVo.setCode(ResponseCodeEnum.SUCCESS.getCode());
 		loginResVo.setMessage(ResponseCodeEnum.SUCCESS.getMessage());

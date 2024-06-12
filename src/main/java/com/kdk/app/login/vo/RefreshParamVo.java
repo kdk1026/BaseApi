@@ -22,7 +22,7 @@ import lombok.ToString;
 @ToString
 public class RefreshParamVo {
 
-	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "갱신 토큰")
+	@Schema(requiredMode = Schema.RequiredMode.REQUIRED, description = "접근 토큰")
 	@NotBlank(message = "접근 토큰은 필수 항목입니다.")
 	private String accessToken;
 
