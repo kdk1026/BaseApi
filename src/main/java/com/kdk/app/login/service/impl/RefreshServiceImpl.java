@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.jwt.JwtTokenProvider;
+import com.kdk.app.common.util.CookieUtil;
 import com.kdk.app.common.util.date.Jsr310DateUtil;
+import com.kdk.app.common.util.spring.ContextUtil;
 import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
@@ -15,6 +17,7 @@ import com.kdk.app.login.service.RefreshService;
 import com.kdk.app.login.vo.LoginResVo;
 import com.kdk.app.login.vo.RefreshParamVo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +57,9 @@ public class RefreshServiceImpl implements RefreshService {
 		// ------------------------------------------------------------------------
 		// 갱신 토큰 유효성 검증
 		// ------------------------------------------------------------------------
-		String sRefreshToken = refreshParamVo.getRefreshToken();
+		HttpServletRequest request = ContextUtil.getInstance().getRequest();
+
+		String sRefreshToken = CookieUtil.getCookie(request, CommonConstants.Jwt.REFRESH_TOKEN).getValue();
 
 		loginResVo = this.validToken(sRefreshToken, jwtTokenProvider, 2);
 
