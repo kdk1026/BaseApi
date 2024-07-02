@@ -51,7 +51,9 @@ public class RefreshServiceImpl implements RefreshService {
 		loginResVo = this.validToken(sAccessToken, jwtTokenProvider, 1);
 
 		if ( !StringUtils.isBlank(loginResVo.getCode()) ) {
-			return loginResVo;
+			if ( !ResponseCodeEnum.ACCESS_TOKEN_EXPIRED.getCode().equals(loginResVo.getCode()) ) {
+				return loginResVo;
+			}
 		}
 
 		// ------------------------------------------------------------------------
@@ -84,7 +86,7 @@ public class RefreshServiceImpl implements RefreshService {
 		// ------------------------------------------------------------------------
 		String sNewAccessToken = "";
 
-		if ( nMinGap <= 10 ) {
+		if ( nMinGap <= 0 ) {
 			// 조건 충족 시, Access 토큰 갱신
 			sNewAccessToken = jwtTokenProvider.generateAccessToken(userVo);
 		} else {
