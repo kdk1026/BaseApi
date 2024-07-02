@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.jwt.JwtTokenProvider;
-import com.kdk.app.common.util.CookieUtil;
 import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
+import com.kdk.app.common.util.spring.SpringCookieUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
 import com.kdk.app.login.vo.LoginParamVo;
@@ -78,7 +78,8 @@ public class LoginController {
 			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
 //			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
 
-			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, false, null);
+//			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, false, null);
+			SpringCookieUtil.getInstance().addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, true, null);
 
 			String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
