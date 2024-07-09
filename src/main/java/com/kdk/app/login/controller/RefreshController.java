@@ -1,7 +1,9 @@
 package com.kdk.app.login.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,7 @@ public class RefreshController {
 
 	@Operation(summary = "토큰 갱신 처리", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {RefreshParamVo.class}))))
 	@PostMapping("/token")
-	public LoginResVo token(@Valid RefreshParamVo refreshParamVo, BindingResult bindingResult, HttpServletResponse response) {
+	public ResponseEntity<LoginResVo> token(@Valid RefreshParamVo refreshParamVo, BindingResult bindingResult, HttpServletResponse response) {
 		log.info("{}", refreshParamVo);
 
 		LoginResVo loginResVo = new LoginResVo();
@@ -51,7 +53,7 @@ public class RefreshController {
 		if ( bindingResult.hasErrors() ) {
 			loginResVo.setCode(ResponseCodeEnum.NO_INPUT.getCode());
 			loginResVo.setMessage( (bindingResult.getAllErrors()).get(0).getDefaultMessage() );
-			return loginResVo;
+			return ResponseEntity.status(HttpStatus.OK).body(loginResVo);
 		}
 
 		try {
@@ -64,7 +66,7 @@ public class RefreshController {
 			loginResVo.setMessage(ResponseCodeEnum.ERROR.getMessage());
 		}
 
-		return loginResVo;
+		return ResponseEntity.status(HttpStatus.OK).body(loginResVo);
 	}
 
 }

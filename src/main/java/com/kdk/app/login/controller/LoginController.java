@@ -1,6 +1,8 @@
 package com.kdk.app.login.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,7 +45,7 @@ public class LoginController {
 
 	@Operation(summary = "로그인 테스트", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {LoginParamVo.class}))))
 	@PostMapping("/auth")
-	public LoginResVo auth(@Valid LoginParamVo loginParamVo, BindingResult bindingResult,
+	public ResponseEntity<LoginResVo> auth(@Valid LoginParamVo loginParamVo, BindingResult bindingResult,
 			HttpServletResponse response) {
 		log.info("{}", loginParamVo);
 
@@ -52,7 +54,7 @@ public class LoginController {
 		if ( bindingResult.hasErrors() ) {
 			loginResVo.setCode(ResponseCodeEnum.NO_INPUT.getCode());
 			loginResVo.setMessage( (bindingResult.getAllErrors()).get(0).getDefaultMessage() );
-			return loginResVo;
+			return ResponseEntity.status(HttpStatus.OK).body(loginResVo);
 		}
 
 		// TODO 테스트용
@@ -97,7 +99,7 @@ public class LoginController {
 			loginResVo.setMessage(ResponseCodeEnum.LOGIN_INVALID.getMessage());
 		}
 
-		return loginResVo;
+		return ResponseEntity.status(HttpStatus.OK).body(loginResVo);
 	}
 
 }
