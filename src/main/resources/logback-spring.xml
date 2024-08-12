@@ -15,6 +15,13 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
 		<property name="SQL_RESULT_LEVEL" value="error"/>
 	</springProfile>
 
+	<springProfile name="local">
+		<property name="PACKAGE_LEVEL" value="debug"/>
+	</springProfile>
+	<springProfile name="!local">
+		<property name="PACKAGE_LEVEL" value="info"/>
+	</springProfile>
+
 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>${LOG_PATTERN}</pattern>
@@ -87,13 +94,13 @@ See here for more details: http://gordondickens.com/wordpress/2013/03/27/sawing-
 	</logger>
 
 	<!-- Package -->
-	<logger name="com.kdk" level="debug" additivity="false">
+	<logger name="com.kdk" level="${PACKAGE_LEVEL}" additivity="false">
 		<appender-ref ref="console"/>
 		<appender-ref ref="packageFile"/>
 		<appender-ref ref="Error"/>
 	</logger>
 
-	<root level="info">
+	<root level="debug">
 		<appender-ref ref="console"/>
 	</root>
 

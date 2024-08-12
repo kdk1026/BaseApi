@@ -29,8 +29,6 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 public class SwaggerInterceptor implements HandlerInterceptor {
 
-	private static final String PRIVATE_IP = "192.168.1";
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -38,9 +36,17 @@ public class SwaggerInterceptor implements HandlerInterceptor {
 		String[] sAllowIps = SpringBootPropertyUtil.getProperty("swagger.allow.ip").split(",");
 		List<String> listAllowIp = Arrays.asList(sAllowIps);
 
+		String[] sAllowBands = SpringBootPropertyUtil.getProperty("swagger.allow.band").split(",");
+
 		String sReqIp = RequestUtil.getRequestIpAddress(request);
 
-		if ( !listAllowIp.contains(sReqIp) || sReqIp.startsWith(PRIVATE_IP) ) {
+		for (String s : sAllowBands) {
+			if ( sReqIp.startsWith(s) ) {
+				return true;
+			}
+		}
+
+		if ( !listAllowIp.contains(sReqIp) ) {
 			CommonResVo commonResVo = new CommonResVo();
 			commonResVo.setCode(ResponseCodeEnum.ERROR.getCode());
 			commonResVo.setMessage("유효하지 않은 접근입니다.");
