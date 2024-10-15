@@ -39,6 +39,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.allowedOriginPatterns("*")
 			.allowedMethods("GET", "POST", "PUT", "DELETE")
 			.allowedHeaders("*")
+			.exposedHeaders("Content-Disposition")
 			.allowCredentials(true)
 			.maxAge(3600);
 	}
