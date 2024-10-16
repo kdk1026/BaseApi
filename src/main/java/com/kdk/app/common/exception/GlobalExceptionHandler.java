@@ -1,5 +1,7 @@
 package com.kdk.app.common.exception;
 
+import java.nio.file.AccessDeniedException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,6 +34,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
     	String sResponseMessage = "Illegal Argument";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sResponseMessage);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handleIAccessDenied(AccessDeniedException e) {
+    	String sResponseMessage = "File Access Denied";
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sResponseMessage);
     }
 
     @ExceptionHandler(Exception.class)
