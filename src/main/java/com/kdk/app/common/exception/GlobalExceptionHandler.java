@@ -1,5 +1,6 @@
 package com.kdk.app.common.exception;
 
+import java.io.FileNotFoundException;
 import java.nio.file.AccessDeniedException;
 
 import org.springframework.http.HttpStatus;
@@ -27,18 +28,31 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(ArithmeticException.class)
 	public ResponseEntity<String> handleArithmeticException(ArithmeticException e) {
+		log.error("", e);
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 	}
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
+    	log.error("", e);
+
     	String sResponseMessage = "Illegal Argument";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sResponseMessage);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleIAccessDenied(AccessDeniedException e) {
+    	log.error("", e);
+
     	String sResponseMessage = "File Access Denied";
+    	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sResponseMessage);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<String> handleFileNotFound(FileNotFoundException e) {
+    	log.error("", e);
+
+    	String sResponseMessage = "File Not Found";
     	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(sResponseMessage);
     }
 
