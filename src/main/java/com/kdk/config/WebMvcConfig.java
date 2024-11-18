@@ -1,5 +1,6 @@
 package com.kdk.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -7,6 +8,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,6 +31,9 @@ import com.kdk.config.mvc.HTMLCharacterEscapes;
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
+
+	@Value("${upload.folder}")
+	private String uploadFolder;
 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
@@ -58,14 +63,23 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 		registry.addInterceptor( new JwtInterceptor() )
 			.addPathPatterns("/**")
-			.excludePathPatterns("/", "/test/exAuth", "/login/**", "/test/get-media");
+			.excludePathPatterns("/", "/test/exAuth", "/login/**", "/test/get-media", "/upload/**");
 	}
 
-    @Bean
+	@Bean
     MappingJackson2HttpMessageConverter jsonEscapeConverter() {
 		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
 		objectMapper.getFactory().setCharacterEscapes(new HTMLCharacterEscapes());
 		return new MappingJackson2HttpMessageConverter(objectMapper);
 	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry
+			.addResourceHandler("/upload/**")
+			.addResourceLocations(uploadFolder);
+	}
+
+
 
 }
