@@ -80,6 +80,4 @@ public class WebMvcConfig implements WebMvcConfigurer {
 			.addResourceLocations(uploadFolder);
 	}
 
-
-
 }
