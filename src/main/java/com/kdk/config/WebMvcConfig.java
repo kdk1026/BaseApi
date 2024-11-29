@@ -35,6 +35,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	@Value("${upload.folder}")
 	private String uploadFolder;
 
+	@Value("${cors.origins}")
+	private String corsOrigins;
+
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		/*
@@ -43,7 +46,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		 */
 		registry
 			.addMapping("/**")
-			.allowedOriginPatterns("*")
+			.allowedOriginPatterns(corsOrigins)
 			.allowedMethods("GET", "POST", "PUT", "DELETE")
 			.allowedHeaders("*")
 			.exposedHeaders("Content-Disposition")
