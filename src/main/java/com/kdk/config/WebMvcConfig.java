@@ -1,8 +1,11 @@
 package com.kdk.config;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -74,6 +77,13 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		ObjectMapper objectMapper = Jackson2ObjectMapperBuilder.json().build();
 		objectMapper.getFactory().setCharacterEscapes(new HTMLCharacterEscapes());
 		return new MappingJackson2HttpMessageConverter(objectMapper);
+	}
+
+	@Override
+	public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+		converters.removeIf(converter -> converter instanceof MappingJackson2HttpMessageConverter);
+        HttpMessageConverter<?> httpMessageConverter = this.jsonEscapeConverter();
+        converters.add(httpMessageConverter);
 	}
 
 	@Override
