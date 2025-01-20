@@ -47,7 +47,16 @@ public class HTMLCharacterEscapes extends CharacterEscapes {
 	 */
 	@Override
 	public SerializableString getEscapeSequence(int ch) {
-		return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
+		char charAt = (char) ch;
+		if ( Character.isHighSurrogate(charAt) || Character.isLowSurrogate(charAt) ) {
+			// 이모지 대응
+			StringBuilder sb = new StringBuilder();
+	        sb.append("\\u");
+	        sb.append(String.format("%04x", ch));
+	        return new SerializedString(sb.toString());
+		} else {
+			return new SerializedString(StringEscapeUtils.escapeHtml4(Character.toString((char) ch)));
+		}
 	}
 
 }
