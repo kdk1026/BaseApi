@@ -74,14 +74,14 @@ public class LoginController {
 			loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 
 			String sRefreshToken = jwtTokenProvider.generateRefreshToken(user);
-//			loginResVo.setRefreshToken(sRefreshToken);
-//
+			loginResVo.setRefreshToken(sRefreshToken);
+
 			String sRefreshTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.refresh.expire.minute");
 			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
-//			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
+			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
 
 //			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, false, null);
-			SpringCookieUtil.getInstance().addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, true, null);
+//			SpringCookieUtil.getInstance().addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, true, null);
 
 			String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
