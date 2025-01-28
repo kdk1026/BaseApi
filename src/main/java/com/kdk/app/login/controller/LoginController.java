@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.jwt.JwtTokenProvider;
 import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
-import com.kdk.app.common.util.spring.SpringCookieUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
 import com.kdk.app.login.vo.LoginParamVo;
