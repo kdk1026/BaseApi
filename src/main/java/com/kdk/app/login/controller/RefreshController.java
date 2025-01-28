@@ -2,7 +2,6 @@ package com.kdk.app.login.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +14,6 @@ import com.kdk.app.login.vo.LoginResVo;
 import com.kdk.app.login.vo.RefreshParamVo;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -43,7 +39,8 @@ public class RefreshController {
 	@Autowired
 	private RefreshService refreshService;
 
-	@Operation(summary = "토큰 갱신 처리", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {RefreshParamVo.class}))))
+	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {RefreshParamVo.class})))
+	@Operation(summary = "토큰 갱신 처리")
 	@PostMapping("/token")
 	public ResponseEntity<LoginResVo> token(@Valid RefreshParamVo refreshParamVo, BindingResult bindingResult, HttpServletResponse response) {
 		log.info("{}", refreshParamVo);

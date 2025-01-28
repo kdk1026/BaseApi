@@ -1,7 +1,6 @@
 package com.kdk.app.login.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,9 +15,6 @@ import com.kdk.app.login.vo.LoginParamVo;
 import com.kdk.app.login.vo.LoginResVo;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -41,7 +37,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/login")
 public class LoginController {
 
-	@Operation(summary = "로그인 테스트", requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {LoginParamVo.class}))))
+	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {LoginParamVo.class})))
+	@Operation(summary = "로그인 테스트")
 	@PostMapping("/auth")
 	public ResponseEntity<LoginResVo> auth(@Valid LoginParamVo loginParamVo, BindingResult bindingResult,
 			HttpServletResponse response) {

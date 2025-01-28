@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.jwt.JwtTokenProvider;
-import com.kdk.app.common.util.CookieUtil;
 import com.kdk.app.common.util.date.Jsr310DateUtil;
-import com.kdk.app.common.util.spring.ContextUtil;
 import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
@@ -17,7 +15,6 @@ import com.kdk.app.login.service.RefreshService;
 import com.kdk.app.login.vo.LoginResVo;
 import com.kdk.app.login.vo.RefreshParamVo;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -59,9 +56,9 @@ public class RefreshServiceImpl implements RefreshService {
 		// ------------------------------------------------------------------------
 		// 갱신 토큰 유효성 검증
 		// ------------------------------------------------------------------------
-		HttpServletRequest request = ContextUtil.getInstance().getRequest();
-
-		String sRefreshToken = CookieUtil.getCookie(request, CommonConstants.Jwt.REFRESH_TOKEN).getValue();
+//		HttpServletRequest request = ContextUtil.getInstance().getRequest();
+//		String sRefreshToken = CookieUtil.getCookie(request, CommonConstants.Jwt.REFRESH_TOKEN).getValue();
+		String sRefreshToken = refreshParamVo.getRefreshToken();
 
 		loginResVo = this.validToken(sRefreshToken, jwtTokenProvider, 2);
 
@@ -101,6 +98,27 @@ public class RefreshServiceImpl implements RefreshService {
 
 		loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 		loginResVo.setAccessToken(sNewAccessToken);
+
+		//--------------------------------------------------
+		// Refresh 토큰 갱신 조건 검증
+		//--------------------------------------------------
+		Date refreshTokenDate = jwtTokenProvider.getExpirationFromJwt(sRefreshToken);
+		String sRefreshExpireDate = Jsr310DateUtil.Convert.getDateToString(refreshTokenDate, "yyyyMMddHHmmss");
+		int nRefreshMinGap = Jsr310DateUtil.GetTimeInterval.intervalMinutes(sRefreshExpireDate);
+
+		if ( nRefreshMinGap <= 60 ) {
+			// 조건 충족 시, Refresh 토큰 갱신
+			String sNewRefreshToken = jwtTokenProvider.generateRefreshToken(userVo);
+
+			//--------------------------------------------------
+			// Refresh 토큰 응답 설정
+			//--------------------------------------------------
+			String sRefreshTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.refresh.expire.minute");
+			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
+
+			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
+			loginResVo.setRefreshToken(sNewRefreshToken);
+		}
 
 		String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
 		if ( sTokenType.lastIndexOf(" ") == -1 ) {
