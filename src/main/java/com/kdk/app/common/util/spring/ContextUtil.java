@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpSession;
  */
 public class ContextUtil {
 
+	private static ContextUtil instance;
+
 	/**
 	 * 외부에서 객체 인스턴스화 불가
 	 */
@@ -29,12 +31,12 @@ public class ContextUtil {
 		super();
 	}
 
-	private static class LazyHolder {
-		private static final ContextUtil INSTANCE = new ContextUtil();
-	}
+	public static synchronized ContextUtil getInstance() {
+		if (instance == null) {
+			instance = new ContextUtil();
+		}
 
-	public static ContextUtil getInstance() {
-		return LazyHolder.INSTANCE;
+		return instance;
 	}
 
 	/**
@@ -44,7 +46,7 @@ public class ContextUtil {
 	 */
 	public Object getBean(String beanName) {
 		WebApplicationContext context = ContextLoader.getCurrentWebApplicationContext();
-		return context.getBean(beanName);
+		return (context == null) ? null : context.getBean(beanName);
 	}
 
 	/**
