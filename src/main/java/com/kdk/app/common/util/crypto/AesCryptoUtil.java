@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,8 @@ import org.slf4j.LoggerFactory;
  * </pre>
  *
  * <pre>
+ * FrontEnd와 암복호화 처리용
+ *
  * - 암호화 키 : 128비트(16자), 192비트(24자), 256비트(32자)
  * - iv : 16자
  * </pre>
@@ -50,6 +53,22 @@ public class AesCryptoUtil {
 	public static final String AES_ECB_PKCS5PADDING ="AES/ECB/PKCS5Padding";
 
 	public String encrypt(String key, String iv, String padding, String plainText) {
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException("key is null");
+		}
+
+		if ( StringUtils.isBlank(iv) ) {
+			throw new IllegalArgumentException("iv is null");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new IllegalArgumentException("padding is null");
+		}
+
+		if ( StringUtils.isBlank(plainText) ) {
+			throw new IllegalArgumentException("plainText is null");
+		}
+
 		String sEncryptText = "";
 
 		try {
@@ -76,6 +95,22 @@ public class AesCryptoUtil {
 	}
 
 	public String decrypt(String key, String iv, String padding, String encryptText) {
+		if ( StringUtils.isBlank(key) ) {
+			throw new IllegalArgumentException("key is null");
+		}
+
+		if ( StringUtils.isBlank(iv) ) {
+			throw new IllegalArgumentException("iv is null");
+		}
+
+		if ( StringUtils.isBlank(padding) ) {
+			throw new IllegalArgumentException("padding is null");
+		}
+
+		if ( StringUtils.isBlank(encryptText) ) {
+			throw new IllegalArgumentException("encryptText is null");
+		}
+
 		String sDecryptText = "";
 		try {
 			SecretKey secretKey = new SecretKeySpec(key.getBytes(CHARSET), "AES");
