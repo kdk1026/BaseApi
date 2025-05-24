@@ -20,8 +20,7 @@ public interface RefreshService {
 	 * 토큰 갱신 처리
 	 * @param refreshParamVo
 	 * @return
-	 * @throws Exception
 	 */
-	public LoginResVo refreshToken(RefreshParamVo refreshParamVo) throws Exception;
+	public LoginResVo refreshToken(RefreshParamVo refreshParamVo);
 
 }

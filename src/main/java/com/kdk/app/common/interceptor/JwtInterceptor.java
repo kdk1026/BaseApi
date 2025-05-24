@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import com.kdk.app.common.CommonConstants;
+import com.kdk.app.common.component.SpringBootProperty;
 import com.kdk.app.common.jwt.JwtTokenProvider;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
@@ -26,7 +27,15 @@ import lombok.extern.slf4j.Slf4j;
  * @author kdk
  */
 @Slf4j
-public class JwtInterceptor implements HandlerInterceptor {@Override
+public class JwtInterceptor implements HandlerInterceptor {
+
+	private SpringBootProperty springBootProperty;
+
+	public JwtInterceptor(SpringBootProperty springBootProperty) {
+		this.springBootProperty = springBootProperty;
+	}
+
+	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
@@ -43,7 +52,7 @@ public class JwtInterceptor implements HandlerInterceptor {@Override
 		// ------------------------------------------------------------------------
 		// 토큰 가져오기
 		// ------------------------------------------------------------------------
-		JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+		JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(springBootProperty);
 
 		String sAccessToken = jwtTokenProvider.getTokenFromReqHeader(request);
 

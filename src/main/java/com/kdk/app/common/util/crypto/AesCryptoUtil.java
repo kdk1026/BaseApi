@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.kdk.app.common.ExceptionMessage;
+
 /**
  * <pre>
  * -----------------------------------
@@ -47,26 +49,26 @@ public class AesCryptoUtil {
         return instance;
     }
 
-	private final String CHARSET = StandardCharsets.UTF_8.toString();
+	private static final String CHARSET = StandardCharsets.UTF_8.toString();
 
 	public static final String AES_CBC_PKCS5PADDING ="AES/CBC/PKCS5Padding";
 	public static final String AES_ECB_PKCS5PADDING ="AES/ECB/PKCS5Padding";
 
 	public String encrypt(String key, String iv, String padding, String plainText) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( StringUtils.isBlank(iv) ) {
-			throw new IllegalArgumentException("iv is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("iv"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		if ( StringUtils.isBlank(plainText) ) {
-			throw new IllegalArgumentException("plainText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("plainText"));
 		}
 
 		String sEncryptText = "";
@@ -96,19 +98,19 @@ public class AesCryptoUtil {
 
 	public String decrypt(String key, String iv, String padding, String encryptText) {
 		if ( StringUtils.isBlank(key) ) {
-			throw new IllegalArgumentException("key is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("key"));
 		}
 
 		if ( StringUtils.isBlank(iv) ) {
-			throw new IllegalArgumentException("iv is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("iv"));
 		}
 
 		if ( StringUtils.isBlank(padding) ) {
-			throw new IllegalArgumentException("padding is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("padding"));
 		}
 
 		if ( StringUtils.isBlank(encryptText) ) {
-			throw new IllegalArgumentException("encryptText is null");
+			throw new IllegalArgumentException(ExceptionMessage.isNull("encryptText"));
 		}
 
 		String sDecryptText = "";

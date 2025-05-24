@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kdk.app.common.component.SpringBootProperty;
 import com.kdk.app.common.jwt.JwtTokenProvider;
-import com.kdk.app.common.util.spring.SpringBootPropertyUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
 import com.kdk.app.login.vo.LoginParamVo;
@@ -37,6 +37,12 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/login")
 public class LoginController {
 
+	private SpringBootProperty springBootProperty;
+
+	public LoginController(SpringBootProperty springBootProperty) {
+		this.springBootProperty = springBootProperty;
+	}
+
 	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {LoginParamVo.class})))
 	@Operation(summary = "로그인 테스트")
 	@PostMapping("/auth")
@@ -52,33 +58,33 @@ public class LoginController {
 			return ResponseEntity.status(HttpStatus.OK).body(loginResVo);
 		}
 
-		// TODO 테스트용
+		// XXX 테스트용
 		if ( "test".equals(loginParamVo.getUserId()) && "1234".equals(loginParamVo.getUserPw()) ) {
 			UserVo user = new UserVo();
 			user.setUserId("test");
 			user.setUserNm("홍길동");
 			user.setHpNo("010-1234-5678");
 
-			JwtTokenProvider jwtTokenProvider = new JwtTokenProvider();
+			JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(springBootProperty);
 
 			String sToken = jwtTokenProvider.generateAccessToken(user);
 			loginResVo.setAccessToken(sToken);
 
-			String sAccessTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.access.expire.minute");
+			String sAccessTokenExpireMin = springBootProperty.getProperty("jwt.access.expire.minute");
 			int nAccessTokenExpireMin = Integer.parseInt(sAccessTokenExpireMin);
 			loginResVo.setAccessTokenExpireSecond(nAccessTokenExpireMin * 60);
 
 			String sRefreshToken = jwtTokenProvider.generateRefreshToken(user);
 			loginResVo.setRefreshToken(sRefreshToken);
 
-			String sRefreshTokenExpireMin = SpringBootPropertyUtil.getProperty("jwt.refresh.expire.minute");
+			String sRefreshTokenExpireMin = springBootProperty.getProperty("jwt.refresh.expire.minute");
 			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
 			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
 
 //			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, false, null);
 //			SpringCookieUtil.getInstance().addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, true, null);
 
-			String sTokenType = SpringBootPropertyUtil.getProperty("jwt.token.type");
+			String sTokenType = springBootProperty.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
 				sTokenType = sTokenType + " ";
 			}

@@ -1,6 +1,5 @@
 package com.kdk.app.login.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -36,8 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/login")
 public class RefreshController {
 
-	@Autowired
 	private RefreshService refreshService;
+
+	public RefreshController(RefreshService refreshService) {
+		this.refreshService = refreshService;
+	}
 
 	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {RefreshParamVo.class})))
 	@Operation(summary = "토큰 갱신 처리")
