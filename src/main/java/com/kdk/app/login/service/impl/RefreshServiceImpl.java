@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class RefreshServiceImpl implements RefreshService {
 
-	private SpringBootProperty springBootProperty;
+	private final SpringBootProperty springBootProperty;
 
 	public RefreshServiceImpl(SpringBootProperty springBootProperty) {
 		this.springBootProperty = springBootProperty;

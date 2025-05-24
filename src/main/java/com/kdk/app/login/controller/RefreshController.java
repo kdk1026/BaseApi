@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/login")
 public class RefreshController {
 
-	private RefreshService refreshService;
+	private final RefreshService refreshService;
 
 	public RefreshController(RefreshService refreshService) {
 		this.refreshService = refreshService;

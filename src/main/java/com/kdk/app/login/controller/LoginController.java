@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/login")
 public class LoginController {
 
-	private SpringBootProperty springBootProperty;
+	private final SpringBootProperty springBootProperty;
 
 	public LoginController(SpringBootProperty springBootProperty) {
 		this.springBootProperty = springBootProperty;
