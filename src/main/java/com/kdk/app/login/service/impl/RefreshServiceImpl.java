@@ -61,8 +61,6 @@ public class RefreshServiceImpl implements RefreshService {
 		// ------------------------------------------------------------------------
 		// 갱신 토큰 유효성 검증
 		// ------------------------------------------------------------------------
-//		HttpServletRequest request = ContextUtil.getInstance().getRequest();
-//		String sRefreshToken = CookieUtil.getCookie(request, CommonConstants.Jwt.REFRESH_TOKEN).getValue();
 		String sRefreshToken = refreshParamVo.getRefreshToken();
 
 		loginResVo = this.validToken(sRefreshToken, jwtTokenProvider, 2);
