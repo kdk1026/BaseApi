@@ -45,7 +45,7 @@ public class TestController {
 	public CommonResVo auth() {
 		CommonResVo commonResVo = new CommonResVo();
 
-		UserVo user = (UserVo) ContextUtil.getInstance().getAttrFromRequest("user");
+		UserVo user = (UserVo) ContextUtil.Request.getAttrFromRequest("user");
 		log.debug("=== {}", user);
 
 		commonResVo.setCode(ResponseCodeEnum.SUCCESS.getCode());
@@ -95,7 +95,7 @@ public class TestController {
 		byte[] byteFile = Files.readAllBytes(path);
 		InputStream is = new BufferedInputStream(new FileInputStream(file));
 
-		String sMimeType = FileMimeTypeUtil.getInstance().getFileMimeTypeTika(is);
+		String sMimeType = FileMimeTypeUtil.getFileMimeTypeTika(is);
 
 		if ( "view".equalsIgnoreCase(mode) ) {
 			return ResponseEntity.status(HttpStatus.OK)

@@ -1,0 +1,122 @@
+package com.kdk.app.common.util.spring;
+
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.kdk.app.common.ExceptionMessage;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
+/**
+ * <pre>
+ * -----------------------------------
+ * 개정이력
+ * -----------------------------------
+ * 2024. 6. 8. 김대광	최초작성
+ * </pre>
+ *
+ *
+ * @author 김대광
+ */
+public class SpringSessionUtil {
+
+	private SpringSessionUtil() {
+		super();
+	}
+
+	public static final String LOGIN_SESSION_ID = "__userInfo__";
+
+	/**
+	 * 로그인 정보를 세션에 저장
+	 * @param request
+	 * @param obj
+	 */
+	public static void setSessionLoginInfo(Object obj) {
+		if ( ObjectUtils.isEmpty(obj) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
+		}
+
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
+		HttpSession session = request.getSession(false);
+		session.invalidate();
+		session = request.getSession(true);
+
+		session.setAttribute(LOGIN_SESSION_ID, obj);
+
+		/*
+		 * 세션 타임아웃 적용 우선 순위
+		 *   - 1, 2번 같이 적용되어 있으면 세션 상태가 이상해지더만....
+		 *
+		 * 	1. [특정 세션] 유효시간 설정 (단위:초)
+		 * 	2. [공통 세션] 유효시간 설정 web.xml (단위:분)
+		 * 	3. [공통 세션] 유효시간 설정 Tomcat경로/conf/web.xml (단위:분)
+		 */
+        session.setMaxInactiveInterval(60*20);
+	}
+
+	/**
+	 * 로그인 정보를 세션에서 가져옴
+	 * @return
+	 */
+	public static Object getSessionLoginInfo() {
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
+		HttpSession session = request.getSession(false);
+		return (session == null ? null : session.getAttribute(LOGIN_SESSION_ID));
+	}
+
+
+	public static void setSessionAttribute(String sKey, Object obj) {
+		if ( !StringUtils.hasText(sKey) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sKey"));
+		}
+
+		if ( ObjectUtils.isEmpty(obj) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
+		}
+
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
+		HttpSession session = request.getSession();
+
+		session.setAttribute(sKey, obj);
+	}
+
+	public static void setSessionAttribute(String sKey, Object obj, int nSecond) {
+		if ( !StringUtils.hasText(sKey) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sKey"));
+		}
+
+		if ( ObjectUtils.isEmpty(obj) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("obj"));
+		}
+
+		if ( nSecond <= 0 ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("nSecond"));
+		}
+
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
+		HttpSession session = request.getSession();
+
+		session.setAttribute(sKey, obj);
+
+		session.setMaxInactiveInterval(nSecond);
+	}
+
+	public static Object getSessionAttribute(String sKey) {
+		if ( !StringUtils.hasText(sKey) ) {
+			throw new IllegalArgumentException(ExceptionMessage.isNull("sKey"));
+		}
+
+		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = attr.getRequest();
+		HttpSession session = request.getSession(false);
+		return (session == null ? null : session.getAttribute(sKey));
+	}
+
+}
