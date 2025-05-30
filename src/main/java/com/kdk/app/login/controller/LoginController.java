@@ -85,8 +85,7 @@ public class LoginController {
 			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
 			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
 
-//			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, false, null);
-//			SpringCookieUtil.getInstance().addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin*60, false, true, null);
+			// XXX 필요 시, 쿠키에 토큰 굽기
 
 			String sTokenType = springBootProperty.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {
