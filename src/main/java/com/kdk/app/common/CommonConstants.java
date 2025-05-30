@@ -46,6 +46,10 @@ public class CommonConstants {
 	// JWT
 	// ------------------------------------------------------------------------
 	public static class Jwt {
+		private Jwt() {
+			super();
+		}
+
 		public static final String USER_INFO = "userInfo";
 		public static final String TOKEN_KIND = "tokenKind";
 		public static final String ACCESS_TOKEN = "accessToken";
