@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -64,6 +65,12 @@ public class TestController {
 
 	/**
 	 * 동영상은 swagger ui에서 멈춤
+	 *
+	 * <pre>
+	 * view는 미디어 파일 한정
+	 * download는 모든 파일 가능
+	 * </pre>
+	 *
 	 * @param mode
 	 * @param fileSeq
 	 * @return
@@ -97,13 +104,15 @@ public class TestController {
 
 		String sMimeType = FileMimeTypeUtil.getFileMimeTypeTika(is);
 
+		String sFileNm = new String(sMediaFileNm.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
+
 		if ( "view".equalsIgnoreCase(mode) ) {
 			return ResponseEntity.status(HttpStatus.OK)
 				.header(HttpHeaders.CONTENT_TYPE, sMimeType)
 				.body(byteFile);
 		} else if ( "download".equalsIgnoreCase(mode) ) {
 			return ResponseEntity.ok()
-				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + sMediaFileNm + "\"")
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + sFileNm + "\"")
 				.header(HttpHeaders.CONTENT_TYPE, sMimeType)
 				.body(byteFile);
 		} else {
