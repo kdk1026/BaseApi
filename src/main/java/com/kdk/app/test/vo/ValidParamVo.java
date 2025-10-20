@@ -35,6 +35,7 @@ public class ValidParamVo {
 	@Pattern(regexp = "\\d+", message = "번호는 숫자 형태여야 합니다.")
 	private String number;
 
+	// https://github.com/kdk1026/CommonJava8/blob/master/src/main/java/common/util/valid/ValidUtil.java - isYYYYMMDD 2차 검증해야 확실
 	@NotBlank(message = "일자는 필수 항목입니다.")
 	@Pattern(regexp = "^\\d{8}$", message = "일자는 YYYYMMDD 형식이어야 합니다.")
 	private String date;
