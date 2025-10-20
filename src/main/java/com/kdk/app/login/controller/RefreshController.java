@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,7 +45,7 @@ public class RefreshController {
 	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {RefreshParamVo.class})))
 	@Operation(summary = "토큰 갱신 처리")
 	@PostMapping("/token")
-	public ResponseEntity<LoginResVo> token(@Valid RefreshParamVo refreshParamVo, BindingResult bindingResult, HttpServletResponse response) {
+	public ResponseEntity<LoginResVo> token(@Valid @RequestBody RefreshParamVo refreshParamVo, BindingResult bindingResult, HttpServletResponse response) {
 		log.info("{}", refreshParamVo);
 
 		LoginResVo loginResVo = new LoginResVo();

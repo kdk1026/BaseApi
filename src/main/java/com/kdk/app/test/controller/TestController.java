@@ -1,4 +1,4 @@
-package com.kdk.app.test;
+package com.kdk.app.test.controller;
 
 import java.io.BufferedInputStream;
 import java.io.File;
