@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kdk.app.common.component.SpringBootProperty;
-import com.kdk.app.common.interceptor.JwtInterceptor;
+import com.kdk.app.common.interceptor.JwtWebInterceptor;
 import com.kdk.app.common.interceptor.SwaggerInterceptor;
 import com.kdk.config.mvc.HTMLCharacterEscapes;
 
@@ -43,9 +44,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
 	private String corsOrigins;
 
 	private final SpringBootProperty springBootProperty;
+	private final Environment env;
 
-	public WebMvcConfig(SpringBootProperty springBootProperty) {
+	public WebMvcConfig(SpringBootProperty springBootProperty, Environment env) {
 		this.springBootProperty = springBootProperty;
+		this.env = env;
 	}
 
 	@Override
@@ -69,12 +72,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addRedirectViewController("/", "/swagger-ui/index.html");
 	}
 
+	@Bean
+	JwtWebInterceptor jwtWebInterceptor() {
+		return new JwtWebInterceptor(springBootProperty, env);
+	};
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor( new SwaggerInterceptor(springBootProperty) )
 			.addPathPatterns("/swagger-ui/index.html");
 
-		registry.addInterceptor( new JwtInterceptor(springBootProperty) )
+		registry.addInterceptor( this.jwtWebInterceptor() )
 			.addPathPatterns("/**")
 			.excludePathPatterns("/", "/test/exAuth", "/login/**", "/test/get-media", "/upload/**", "/valid/**", "/sse/**");
 	}

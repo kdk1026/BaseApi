@@ -1,5 +1,6 @@
 package com.kdk.app.login.controller;
 
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -8,9 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.component.SpringBootProperty;
 import com.kdk.app.common.jwt.JwtTokenProvider;
 import com.kdk.app.common.jwt.JwtTokenVo;
+import com.kdk.app.common.util.CookieUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
 import com.kdk.app.login.vo.LoginParamVo;
@@ -40,9 +43,11 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
 	private final SpringBootProperty springBootProperty;
+	private final Environment env;
 
-	public LoginController(SpringBootProperty springBootProperty) {
+	public LoginController(SpringBootProperty springBootProperty, Environment env) {
 		this.springBootProperty = springBootProperty;
+		this.env = env;
 	}
 
 	// requestBody = @RequestBody(content = @Content(mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE, schema = @Schema(allOf = {LoginParamVo.class})))
@@ -80,13 +85,12 @@ public class LoginController {
 
 			jwtTokenVo = jwtTokenProvider.generateRefreshToken(user);
 			String sRefreshToken = jwtTokenVo.getRefreshToken();
-			loginResVo.setRefreshToken(sRefreshToken);
 
 			String sRefreshTokenExpireMin = springBootProperty.getProperty("jwt.refresh.expire.minute");
 			int nRefreshTokenExpireMin = Integer.parseInt(sRefreshTokenExpireMin);
-			loginResVo.setRefreshTokenExpireSecond(nRefreshTokenExpireMin * 60);
 
-			// XXX 필요 시, 쿠키에 토큰 굽기
+			String sProfile = env.getActiveProfiles()[0];
+			CookieUtil.addCookie(response, CommonConstants.Jwt.REFRESH_TOKEN, sRefreshToken, nRefreshTokenExpireMin * 60, null, sProfile);
 
 			String sTokenType = springBootProperty.getProperty("jwt.token.type");
 			if ( sTokenType.lastIndexOf(" ") == -1 ) {

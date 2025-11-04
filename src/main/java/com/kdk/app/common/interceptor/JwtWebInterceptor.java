@@ -1,13 +1,16 @@
 package com.kdk.app.common.interceptor;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.kdk.app.common.CommonConstants;
 import com.kdk.app.common.component.SpringBootProperty;
 import com.kdk.app.common.jwt.JwtTokenProvider;
+import com.kdk.app.common.util.CookieUtil;
 import com.kdk.app.common.vo.ResponseCodeEnum;
 import com.kdk.app.common.vo.UserVo;
 
@@ -15,25 +18,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
-/**
+ /**
  * <pre>
  * -----------------------------------
  * 개정이력
  * -----------------------------------
- * 2024. 6. 7. kdk	최초작성
+ * 2025. 11. 4. 김대광	최초작성
  * </pre>
  *
- * 쿠키 사용 못하는 네이티브 앱과 협업 시
  *
- * @author kdk
+ * @author 김대광
  */
 @Slf4j
-public class JwtInterceptor implements HandlerInterceptor {
+public class JwtWebInterceptor implements HandlerInterceptor {
 
 	private final SpringBootProperty springBootProperty;
+	private final Environment env;
 
-	public JwtInterceptor(SpringBootProperty springBootProperty) {
+	public JwtWebInterceptor(SpringBootProperty springBootProperty, Environment env) {
 		this.springBootProperty = springBootProperty;
+		this.env = env;
 	}
 
 	@Override
@@ -67,6 +71,12 @@ public class JwtInterceptor implements HandlerInterceptor {
 			return false;
 		}
 
+		String sRefreshToken = CookieUtil.getCookieValue(request, CommonConstants.Jwt.REFRESH_TOKEN);
+		if ( StringUtils.isBlank(sRefreshToken) ) {
+			response.sendError(HttpStatus.UNAUTHORIZED.value(), ResponseCodeEnum.ACCESS_DENIED.getMessage());
+			return false;
+		}
+
 		int nValid = jwtTokenProvider.isValidateJwtToken(sAccessToken);
 
 		if ( nValid == 0 ) {
@@ -76,9 +86,22 @@ public class JwtInterceptor implements HandlerInterceptor {
 		}
 
 		if ( nValid == 2 ) {
-			log.error("AccessToken Expired");
-			response.sendError(HttpStatus.UNAUTHORIZED.value(), ResponseCodeEnum.ACCESS_TOKEN_EXPIRED.getMessage());
-			return false;
+			log.info("AccessToken Expired");
+
+			String sProfile = env.getActiveProfiles()[0];
+			sAccessToken = jwtTokenProvider.getRenewedAccessToken(sRefreshToken, sProfile);
+
+			CookieUtil.addCookie(response, CommonConstants.Jwt.ACCESS_TOKEN, sAccessToken, 300, null, sProfile);
+
+			UserVo userVo = jwtTokenProvider.getAuthUserFromJwt(sRefreshToken);
+
+			// ------------------------------------------------------------------------
+			// 편하게 사용하기 위해, request에 담음
+			// - 세션이 아니므로 addPathPatterns 대상 URI에서만 가지고 올 수 있음
+			// ------------------------------------------------------------------------
+			request.setAttribute(CommonConstants.Jwt.USER_INFO, userVo);
+
+			return true;
 		}
 
 		// ------------------------------------------------------------------------
@@ -112,6 +135,20 @@ public class JwtInterceptor implements HandlerInterceptor {
 		request.setAttribute("user", user);
 
 		return true;
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+
+		String sAccessToken = CookieUtil.getCookieValue(request, CommonConstants.Jwt.ACCESS_TOKEN);
+
+		String sProfile = env.getActiveProfiles()[0];
+		CookieUtil.removeCookie(response, CommonConstants.Jwt.ACCESS_TOKEN, null, sProfile);
+
+		if ( StringUtils.isBlank(sAccessToken) ) {
+			response.addHeader(CommonConstants.Jwt.ACCESS_TOKEN, sAccessToken);
+		}
 	}
 
 }
