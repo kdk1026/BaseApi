@@ -93,7 +93,7 @@ public class JwtWebInterceptor implements HandlerInterceptor {
 
 			CookieUtil.addCookie(response, CommonConstants.Jwt.ACCESS_TOKEN, sAccessToken, 300, null, sProfile);
 
-			UserVo userVo = jwtTokenProvider.getAuthUserFromJwt(sRefreshToken);
+			UserVo userVo = jwtTokenProvider.getAuthUserFromJwt(sAccessToken);
 
 			// ------------------------------------------------------------------------
 			// 편하게 사용하기 위해, request에 담음
