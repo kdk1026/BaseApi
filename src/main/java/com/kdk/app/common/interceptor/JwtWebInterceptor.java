@@ -147,7 +147,7 @@ public class JwtWebInterceptor implements HandlerInterceptor {
 		CookieUtil.removeCookie(response, CommonConstants.Jwt.ACCESS_TOKEN, null, sProfile);
 
 		if ( StringUtils.isBlank(sAccessToken) ) {
-			response.addHeader(CommonConstants.Jwt.ACCESS_TOKEN, sAccessToken);
+			response.setHeader(CommonConstants.Jwt.ACCESS_TOKEN, sAccessToken);
 		}
 	}
 
