@@ -84,7 +84,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
 		registry.addInterceptor( this.jwtWebInterceptor() )
 			.addPathPatterns("/**")
-			.excludePathPatterns("/", "/test/exAuth", "/login/**", "/test/get-media", "/upload/**", "/valid/**", "/sse/**");
+			.excludePathPatterns("/", "/test/exAuth", "/login/**", "/test/get-media", "/upload/**", "/capsule-config/**", "/valid/**", "/sse/**");
 	}
 
 	@Bean
